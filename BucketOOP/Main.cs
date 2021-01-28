@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace BucketOOP
 {
-    //abstract
+    //abstract container
 
     public abstract class Container
     {
@@ -37,7 +37,7 @@ namespace BucketOOP
             this.Content -= amount;
         }
 
-
+        // bruikbare classes
 
         public class Bucket : Container
         {
@@ -97,28 +97,37 @@ namespace BucketOOP
                 this.Content = content;
             }
         }
-        
+
 
 
 
         //event
 
-
+        // method berekent de hoeveelheid liters die overstroomt, geeft tevens een melding van het aantal liters.
         protected virtual void OnOverflowing(Bucket bucket)
         {
+            int overflow;
+
             if (Content >= Capacity)
             {
-                Console.WriteLine("Bucket is OverFlowing");
+                overflow = Content - Capacity;
+
+                Console.WriteLine("Bucket is overflowing by" + overflow.ToString());
             }
         }
 
+        // deze method doet niks
         protected virtual void OnOverflowed(Bucket bucket)
         {
             Capacity = Content;
+            Full();
         }
 
+        // method zorgt ervoor dat de content niet hoger kan zijn dan de maximale capaciteit, geeft tevens een melding hiervan.
         protected virtual void Full()
         {
+            Capacity = Content;
+
             if (Content == Capacity)
             {
                 Console.WriteLine("Bucket is Full");
@@ -128,22 +137,22 @@ namespace BucketOOP
         }
 
         [TestMethod]
+
+        // Zorg ervoor dat alleen een emmer ook gevuld kan worden met de inhoud van een andere emmer.
+
         public void Oefening2()
         {
+            // 4 liter
             int amount = 4;
-
-            //List<Bucket> buckets = new List<Bucket>();
 
             Bucket bucket1 = new Bucket(12, 5);
             Bucket bucket2 = new Bucket(10, 0);
             Bucket bucket3 = new Bucket(16, 15);
 
-            //buckets.Add(bucket1);
-            //buckets.Add(bucket2);
-            //buckets.Add(bucket3);
-
+            // 4 liter legen in bucket 1.
             bucket1.Empty(amount);
 
+            // bucket 2 met 4 liter vullen.
             for (int i = 0; i < amount; i++)
             {
                 bucket2.Fill(1);
@@ -152,8 +161,13 @@ namespace BucketOOP
         }
 
         [TestMethod]
+
+        //Er moeten ook olievaten gemaakt kunnen worden. Olievaten hebben een vaste afmeting van 159. Regentonnen bestaan in de volgende drie maten: klein 80, middel 120 en groot 160. Deze twee zijn vergelijkbaar met een emmer.
+
         public void Oefening3()
         {
+            // lijst maken van alle containers.
+
             OlieVat olievat1 = new OlieVat(159, 0);
             OlieVat olievat2 = new OlieVat(159, 0);
             OlieVat olievat3 = new OlieVat(159, 0);
@@ -178,22 +192,31 @@ namespace BucketOOP
             containers.Add(bucket2);
             containers.Add(bucket3);
 
+            // deze containers sorteren op inhoud.
             containers.OrderBy(x => x.Content);
         }
 
         [TestMethod]
+
+        //Wanneer de emmer overstroomd of gevuld wordt met een te grote hoeveelheid moet de emmer kenbaar kunnen maken hoeveel er naast de emmer is gevallen.
+
         public void Oefening4()
         {
+            // bucket vullen met 15 liter?
             int amount = 15;
 
             Bucket bucket1 = new Bucket(12, 5);
             Bucket bucket2 = new Bucket(10, 0);
             Bucket bucket3 = new Bucket(16, 15);
 
+            // per liter de emmer vullen en controleren of de aan het overstromen is.
             for (int i = 0; i < amount; i++)
             {
                 bucket3.Fill(1);
+                bucket3.OnOverflowing(bucket3);
             }
+            //emmer na het vullen de maximale capaciteit geven.
+            bucket3.Full();
         }
 
 
@@ -203,7 +226,7 @@ namespace BucketOOP
 
         static void Main(string[] args)
         {
- 
+
         }
     }
 }
